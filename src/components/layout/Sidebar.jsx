@@ -1,246 +1,195 @@
-// // import React from "react";
-// // import { NavLink } from "react-router-dom";
-
-// // const Sidebar = () => {
-// //   return (
-// //     <div className="sidebar-container h-100 shadow">
-// //       <div className="p-4 border-bottom border-secondary mb-3 text-white text-center">
-// //         <h4 className="mb-0">
-// //           Article<span style={{ color: "var(--accent)" }}>Flow</span>
-// //         </h4>
-// //       </div>
-
-// //       <div className="d-flex flex-column px-2">
-// //         <NavLink
-// //           to="/admin/dashboard"
-// //           className={({ isActive }) =>
-// //             isActive ? "nav-link-custom active" : "nav-link-custom"
-// //           }>
-// //           <i className="bi bi-speedometer2 me-2"></i> Dashboard
-// //         </NavLink>
-
-// //         <NavLink
-// //           to="/admin/users"
-// //           className={({ isActive }) =>
-// //             isActive ? "nav-link-custom active" : "nav-link-custom"
-// //           }>
-// //           <i className="bi bi-people me-2"></i> User List
-// //         </NavLink>
-
-// //         <NavLink
-// //           to="/admin/categories"
-// //           className={({ isActive }) =>
-// //             isActive ? "nav-link-custom active" : "nav-link-custom"
-// //           }>
-// //           <i className="bi bi-tags me-2"></i> Categories
-// //         </NavLink>
-// //         <NavLink
-// //           to="/admin/subcategories"
-// //           className={({ isActive }) =>
-// //             isActive ? "nav-link-custom active" : "nav-link-custom"
-// //           }>
-// //           <i className="bi bi-tags me-2"></i> SubCategories
-// //         </NavLink>
-
-// //         <NavLink
-// //           to="/admin/articles"
-// //           className={({ isActive }) =>
-// //             isActive ? "nav-link-custom active" : "nav-link-custom"
-// //           }>
-// //           <i className="bi bi-file-earmark-post me-2"></i> Article Post
-// //         </NavLink>
-
-// //         <NavLink
-// //           to="/admin/comments"
-// //           className={({ isActive }) =>
-// //             isActive ? "nav-link-custom active" : "nav-link-custom"
-// //           }>
-// //           <i className="bi bi-chat-left-text me-2"></i> Comments
-// //         </NavLink>
-
-// //         <NavLink
-// //           to="/admin/media"
-// //           className={({ isActive }) =>
-// //             isActive ? "nav-link-custom active" : "nav-link-custom"
-// //           }>
-// //           <i className="bi bi-images me-2"></i> Media
-// //         </NavLink>
-
-// //         <NavLink
-// //           to="/admin/settings"
-// //           className={({ isActive }) =>
-// //             isActive ? "nav-link-custom active" : "nav-link-custom"
-// //           }>
-// //           <i className="bi bi-gear me-2"></i> Settings
-// //         </NavLink>
-// //       </div>
-// //     </div>
-// //   );
-// // };
-
-// // export default Sidebar;
-
-// import React from "react";
 // import { NavLink } from "react-router-dom";
-// import logo from "../../assets/logo.png";
-// const Sidebar = ({ onClose }) => {
-//   return (
-//     <div className="sidebar-container h-100 shadow">
-//       {/* Mobile Header - Only for mobile screens */}
-//       <div className="d-lg-none d-flex align-items-center justify-content-between p-2 border-bottom">
-//         {/* Left side: ArticleF brand */}
-//         <img
-//           src={logo}
-//           alt="Article Logo"
-//           style={{ height: "40px", width: "auto" }}
-//         />
+// import { useMedia } from "../../context/MediaContext";
+// import { getFullImageUrl } from "../../Services/adminService";
+// import defaultLogo from "../../assets/logo.png";
 
-//         {/* Right side: Close button (only for mobile) */}
-//         {onClose && (
-//           <button
-//             className="btn btn-link text-white p-0"
-//             onClick={onClose}
-//             aria-label="Close sidebar"
-//             style={{ fontSize: "24px" }}>
-//             ×
-//           </button>
-//         )}
+// const Sidebar = ({ onClose }) => {
+//   const { logoUrl } = useMedia();
+
+//   const logoStyle = {
+//     height: "50px",
+//     width: "160px",
+//     objectFit: "contain",
+//   };
+
+//   return (
+//     <div className="sidebar-container shadow">
+//       {/* Mobile Header */}
+//       <div className="d-lg-none d-flex align-items-center justify-content-between p-2 border-bottom border-secondary">
+//         <img
+//           src={logoUrl ? getFullImageUrl(logoUrl) : defaultLogo}
+//           alt="Logo"
+//           style={{ height: "35px", objectFit: "contain" }}
+//         />
+//         <button
+//           className="btn btn-link text-white p-0"
+//           onClick={onClose}
+//           style={{ fontSize: "28px" }}
+//         >
+//           &times;
+//         </button>
 //       </div>
 
-//       {/* Desktop Header - Shows only on desktop */}
-//       <div className="d-none d-lg-block  border-bottom border-secondary p-4 text-white text-center">
-//         {/* Left side: ArticleF brand */}
+//       {/* Desktop Header */}
+//       <div className="d-none d-lg-block p-4 text-center border-bottom border-secondary">
 //         <img
-//           src={logo}
-//           alt="Article Logo"
-//           style={{ height: "60px", width: "auto" }}
+//           src={logoUrl ? getFullImageUrl(logoUrl) : defaultLogo}
+//           alt="Logo"
+//           style={logoStyle}
 //         />
 //       </div>
 
 //       {/* Menu Items */}
-//       <div className="d-flex flex-column px-2 pt-3">
-//         <NavLink
+//       <div className="sidebar-menu-wrapper p-3">
+//         <SidebarItem
 //           to="/admin/dashboard"
-//           className={({ isActive }) =>
-//             `nav-link-custom d-flex align-items-center py-3 px-3 mb-1 rounded ${isActive ? "active" : ""}`
-//           }
-//           onClick={onClose} // Close sidebar on mobile when clicked
-//         >
-//           <i className="bi bi-speedometer2 me-3"></i>
-//           <span>Dashboard</span>
-//         </NavLink>
-
-//         <NavLink
+//           icon="bi-grid-1x2"
+//           label="Dashboard"
+//           onClick={onClose}
+//         />
+//         <SidebarItem
 //           to="/admin/users"
-//           className={({ isActive }) =>
-//             `nav-link-custom d-flex align-items-center py-3 px-3 mb-1 rounded ${isActive ? "active" : ""}`
-//           }
-//           onClick={onClose}>
-//           <i className="bi bi-people me-3"></i>
-//           <span>User List</span>
-//         </NavLink>
-
-//         <NavLink
+//           icon="bi-people"
+//           label="User"
+//           onClick={onClose}
+//         />
+//         <SidebarItem
 //           to="/admin/categories"
-//           className={({ isActive }) =>
-//             `nav-link-custom d-flex align-items-center py-3 px-3 mb-1 rounded ${isActive ? "active" : ""}`
-//           }
-//           onClick={onClose}>
-//           <i className="bi bi-tags me-3"></i>
-//           <span>Categories</span>
-//         </NavLink>
-
-//         <NavLink
+//           icon="bi-tags"
+//           label="Categories"
+//           onClick={onClose}
+//         />
+//         <SidebarItem
 //           to="/admin/subcategories"
-//           className={({ isActive }) =>
-//             `nav-link-custom d-flex align-items-center py-3 px-3 mb-1 rounded ${isActive ? "active" : ""}`
-//           }
-//           onClick={onClose}>
-//           <i className="bi bi-tags me-3"></i>
-//           <span>SubCategories</span>
-//         </NavLink>
-
-//         <NavLink
+//           icon="bi-layers"
+//           label="SubCategories"
+//           onClick={onClose}
+//         />
+//         <SidebarItem
 //           to="/admin/articles"
-//           className={({ isActive }) =>
-//             `nav-link-custom d-flex align-items-center py-3 px-3 mb-1 rounded ${isActive ? "active" : ""}`
-//           }
-//           onClick={onClose}>
-//           <i className="bi bi-file-earmark-post me-3"></i>
-//           <span>Article Post</span>
-//         </NavLink>
-
-//         <NavLink
+//           icon="bi-file-earmark-richtext"
+//           label="Article Post"
+//           onClick={onClose}
+//         />
+//         <SidebarItem
 //           to="/admin/comments"
-//           className={({ isActive }) =>
-//             `nav-link-custom d-flex align-items-center py-3 px-3 mb-1 rounded ${isActive ? "active" : ""}`
-//           }
-//           onClick={onClose}>
-//           <i className="bi bi-chat-left-text me-3"></i>
-//           <span>Comments</span>
-//         </NavLink>
-
-//         <NavLink
+//           icon="bi-chat-left-dots"
+//           label="Comments"
+//           onClick={onClose}
+//         />
+//         <SidebarItem
 //           to="/admin/media"
-//           className={({ isActive }) =>
-//             `nav-link-custom d-flex align-items-center py-3 px-3 mb-1 rounded ${isActive ? "active" : ""}`
-//           }
-//           onClick={onClose}>
-//           <i className="bi bi-images me-3"></i>
-//           <span>Media</span>
-//         </NavLink>
+//           icon="bi-images"
+//           label="Media "
+//           onClick={onClose}
+//         />
+//         <SidebarItem
+//           to="/admin/events"
+//           icon="bi-calendar-event"
+//           label="Events "
+//           onClick={onClose}
+//         />
+//         <SidebarItem
+//           to="/admin/videos"
+//           icon="bi-play-circle"
+//           label="Videos "
+//           onClick={onClose}
+//         />
+//         <SidebarItem
+//           to="/admin/transaction"
+//           icon="bi-cash-stack"
+//           label="Transaction"
+//           onClick={onClose}
+//         />
 
-//         <NavLink
+//         <SidebarItem
 //           to="/admin/settings"
-//           className={({ isActive }) =>
-//             `nav-link-custom d-flex align-items-center py-3 px-3 mb-1 rounded ${isActive ? "active" : ""}`
-//           }
-//           onClick={onClose}>
-//           <i className="bi bi-gear me-3"></i>
-//           <span>Settings</span>
-//         </NavLink>
+//           icon="bi-gear"
+//           label="Settings"
+//           onClick={onClose}
+//         />
 //       </div>
 //     </div>
 //   );
 // };
 
-// export default Sidebar;
+// const SidebarItem = ({ to, icon, label, onClick }) => (
+//   <NavLink
+//     to={to}
+//     className={({ isActive }) =>
+//       `nav-link-custom d-flex align-items-center px-3 py-2 ${isActive ? "active" : ""}`
+//     }
+//     onClick={onClick}
+//     style={{ textDecoration: "none", color: "inherit" }}
+//   >
+//     <i
+//       className={`bi ${icon} me-3`}
+//       style={{ fontSize: "1.2rem", display: "inline-block" }}
+//     ></i>
+//     <span>{label}</span>
+//   </NavLink>
+// );
 
-import React from "react";
+// export default Sidebar;
 import { NavLink } from "react-router-dom";
-import logo from "../../assets/logo.png";
+import { useMedia } from "../../context/MediaContext";
+import { getFullImageUrl } from "../../Services/adminService";
+import defaultLogo from "../../assets/logo.png";
 
 const Sidebar = ({ onClose }) => {
+  const { logoUrl } = useMedia();
+
+  // ✅ Reduced logo size only
+  const logoStyle = {
+    height: "38px", // reduced from 50px
+    width: "130px", // reduced from 160px
+    objectFit: "contain",
+  };
+
   return (
     <div className="sidebar-container shadow">
       {/* Mobile Header */}
-      <div className="d-lg-none d-flex align-items-center justify-content-between p-3 border-bottom border-secondary">
-        <img src={logo} alt="Logo" style={{ height: "35px" }} />
+      <div className="d-lg-none d-flex align-items-center justify-content-between p-2 border-bottom border-secondary">
+        <img
+          src={logoUrl ? getFullImageUrl(logoUrl) : defaultLogo}
+          alt="Logo"
+          style={{
+            height: "50px", // reduced from 35px
+            width: "150px",
+            marginLeft: "10px",
+            objectFit: "contain",
+          }}
+        />
         <button
-          className="btn btn-link text-white p-0"
+          className="btn text-black p-0"
           onClick={onClose}
-          style={{ fontSize: "28px", lineHeight: 1 }}>
+          style={{ fontSize: "28px" }}
+        >
           &times;
         </button>
       </div>
 
       {/* Desktop Header */}
-      <div className="d-none d-lg-block p-4 text-center border-bottom border-secondary">
-        <img src={logo} alt="Logo" style={{ height: "50px", width: "auto" }} />
+      <div className="d-none d-lg-block p-3 text-center border-bottom border-secondary">
+        <img
+          src={logoUrl ? getFullImageUrl(logoUrl) : defaultLogo}
+          alt="Logo"
+          style={logoStyle}
+        />
       </div>
 
-      {/* Menu Items Area */}
-      <div className="sidebar-menu-wrapper">
+      {/* Menu Items */}
+      <div className="sidebar-menu-wrapper p-3">
         <SidebarItem
           to="/admin/dashboard"
-          icon="bi-speedometer2"
+          icon="bi-grid-1x2"
           label="Dashboard"
           onClick={onClose}
         />
         <SidebarItem
           to="/admin/users"
           icon="bi-people"
-          label="User List"
+          label="User"
           onClick={onClose}
         />
         <SidebarItem
@@ -251,26 +200,44 @@ const Sidebar = ({ onClose }) => {
         />
         <SidebarItem
           to="/admin/subcategories"
-          icon="bi-grid-3x3-gap"
+          icon="bi-layers"
           label="SubCategories"
           onClick={onClose}
         />
         <SidebarItem
           to="/admin/articles"
-          icon="bi-file-earmark-post"
+          icon="bi-file-earmark-richtext"
           label="Article Post"
           onClick={onClose}
         />
         <SidebarItem
           to="/admin/comments"
-          icon="bi-chat-left-text"
+          icon="bi-chat-left-dots"
           label="Comments"
           onClick={onClose}
         />
         <SidebarItem
           to="/admin/media"
           icon="bi-images"
-          label="Media"
+          label="Media "
+          onClick={onClose}
+        />
+        <SidebarItem
+          to="/admin/events"
+          icon="bi-calendar-event"
+          label="Events "
+          onClick={onClose}
+        />
+        <SidebarItem
+          to="/admin/videos"
+          icon="bi-play-circle"
+          label="Videos "
+          onClick={onClose}
+        />
+        <SidebarItem
+          to="/admin/transaction"
+          icon="bi-cash-stack"
+          label="Transaction"
           onClick={onClose}
         />
         <SidebarItem
@@ -284,13 +251,21 @@ const Sidebar = ({ onClose }) => {
   );
 };
 
-// Reusable Sub-component for Menu Items
 const SidebarItem = ({ to, icon, label, onClick }) => (
   <NavLink
     to={to}
-    className={({ isActive }) => `nav-link-custom ${isActive ? "active" : ""}`}
-    onClick={onClick}>
-    <i className={`bi ${icon} me-3`}></i>
+    className={({ isActive }) =>
+      `nav-link-custom d-flex align-items-center px-3 py-2 ${
+        isActive ? "active" : ""
+      }`
+    }
+    onClick={onClick}
+    style={{ textDecoration: "none", color: "inherit" }}
+  >
+    <i
+      className={`bi ${icon} me-3`}
+      style={{ fontSize: "1.2rem", display: "inline-block" }}
+    ></i>
     <span>{label}</span>
   </NavLink>
 );

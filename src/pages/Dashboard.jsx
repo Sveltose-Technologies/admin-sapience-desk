@@ -6,8 +6,8 @@
 //   getAllCategories,
 //   getAllComments,
 // } from "../Services/adminService";
+
 // const Dashboard = () => {
-//   // State for dynamic counts
 //   const [statsData, setStatsData] = useState({
 //     users: 0,
 //     articles: 0,
@@ -16,12 +16,10 @@
 //   });
 //   const [loading, setLoading] = useState(true);
 
-//   // Fetch all counts on component mount
 //   useEffect(() => {
 //     const fetchDashboardStats = async () => {
 //       try {
 //         setLoading(true);
-//         // Saari APIs ko ek saath call kar rahe hain performance ke liye
 //         const [usersRes, articlesRes, categoriesRes, commentsRes] =
 //           await Promise.all([
 //             getAllUsers(),
@@ -30,7 +28,6 @@
 //             getAllComments(),
 //           ]);
 
-//         // Backend response structure ke mutabiq length nikalna
 //         setStatsData({
 //           users: usersRes.users?.length || usersRes.data?.length || 0,
 //           articles:
@@ -52,76 +49,74 @@
 
 //   const stats = [
 //     {
-//       title: "Total User",
+//       title: "TOTAL USER",
 //       count: statsData.users,
 //       icon: "bi bi-people",
-//       colorClass: "text-primary",
-//       bgClass: "bg-primary",
+//       color: "#4f46e5",
 //     },
 //     {
-//       title: "Total Post",
+//       title: "TOTAL POST",
 //       count: statsData.articles,
 //       icon: "bi bi-file-earmark-text",
-//       colorClass: "text-warning",
-//       bgClass: "bg-warning",
+//       color: "#f59e0b",
 //     },
 //     {
-//       title: "Total Category",
+//       title: "TOTAL CATEGORY",
 //       count: statsData.categories,
 //       icon: "bi bi-grid",
-//       colorClass: "text-success",
-//       bgClass: "bg-success",
+//       color: "#10b981",
 //     },
 //     {
-//       title: "Total Comments",
+//       title: "TOTAL COMMENTS",
 //       count: statsData.comments,
 //       icon: "bi bi-chat-dots",
-//       colorClass: "text-danger",
-//       bgClass: "bg-danger",
+//       color: "#ef4444",
 //     },
 //   ];
 
 //   return (
 //     <Container fluid className="py-4">
-//       {/* Header Section */}
+//       {/* Header Section - Fixed */}
 //       <div className="mb-4">
-//         <h2 className="fw-bold m-0">Dashboard Overview</h2>
-//         <p className="text-muted small">
+//         <h2 className="fw-bold mb-2 text-dark">Dashboard Overview</h2>
+//         <p className="text-muted mb-4">
 //           Welcome back, Admin! Here's what's happening today.
 //         </p>
 //       </div>
 
-//       {/* Stats Cards */}
-//       <Row>
+//       {/* Stats Cards - Improved Responsive Grid */}
+//       <Row className="g-3">
 //         {stats.map((item, i) => (
-//           <Col xl={3} md={6} key={i} className="mb-4">
-//             <Card className="border-0 shadow-sm rounded-3">
-//               <Card.Body className="p-4">
-//                 <div className="d-flex align-items-center justify-content-between">
-//                   <div>
-//                     <p className="text-muted small fw-bold text-uppercase mb-1">
-//                       {item.title}
-//                     </p>
-//                     <h3 className="fw-bold m-0">
-//                       {loading ? (
-//                         <Spinner
-//                           animation="border"
-//                           size="sm"
-//                           variant="secondary"
-//                         />
-//                       ) : (
-//                         item.count
-//                       )}
-//                     </h3>
-//                   </div>
-//                   {/* Icon section (as per your original code) */}
-//                   {/* <div
-//                     className={`p-3 rounded-circle bg-opacity-10 ${item.bgClass.replace("bg-", "text-")}`}
-//                     style={{ backgroundColor: "rgba(0,0,0,0.05)" }}>
-//                     <i className={`${item.icon} h4 mb-0`}></i>
-//                   </div> */}
+//           <Col xs={12} sm={6} md={3} key={i} className="mb-3">
+//             <Card
+//               className="border-0 shadow-sm h-100"
+//               style={{ minHeight: "120px" }}
+//             >
+//               <Card.Body className="p-3 d-flex flex-column justify-content-center align-items-center text-center">
+//                 {/* Count with large font */}
+//                 <h1
+//                   className="display-6 fw-bold mb-2"
+//                   style={{ color: item.color }}
+//                 >
+//                   {loading ? (
+//                     <Spinner animation="border" size="sm" />
+//                   ) : (
+//                     item.count
+//                   )}
+//                 </h1>
+
+//                 {/* Title */}
+//                 <p className="text-muted mb-0 small fw-bold text-uppercase">
+//                   {item.title}
+//                 </p>
+
+//                 {/* Optional icon */}
+//                 <div className="mt-2">
+//                   <i
+//                     className={`${item.icon} fs-5`}
+//                     style={{ color: item.color }}
+//                   ></i>
 //                 </div>
-//                 {/* Optional small detail text */}
 //               </Card.Body>
 //             </Card>
 //           </Col>
@@ -132,8 +127,11 @@
 // };
 
 // export default Dashboard;
+
 import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Container, Spinner } from "react-bootstrap";
+// 1. Import Link from react-router-dom
+import { Link } from "react-router-dom";
 import {
   getAllUsers,
   getAllArticles,
@@ -181,36 +179,40 @@ const Dashboard = () => {
     fetchDashboardStats();
   }, []);
 
+  // Add 'path' property to match your App.js routes
   const stats = [
     {
       title: "TOTAL USER",
       count: statsData.users,
       icon: "bi bi-people",
       color: "#4f46e5",
+      path: "/admin/users",
     },
     {
       title: "TOTAL POST",
       count: statsData.articles,
       icon: "bi bi-file-earmark-text",
       color: "#f59e0b",
+      path: "/admin/articles",
     },
     {
       title: "TOTAL CATEGORY",
       count: statsData.categories,
       icon: "bi bi-grid",
       color: "#10b981",
+      path: "/admin/categories",
     },
     {
       title: "TOTAL COMMENTS",
       count: statsData.comments,
       icon: "bi bi-chat-dots",
       color: "#ef4444",
+      path: "/admin/comments",
     },
   ];
 
   return (
     <Container fluid className="py-4">
-      {/* Header Section - Fixed */}
       <div className="mb-4">
         <h2 className="fw-bold mb-2 text-dark">Dashboard Overview</h2>
         <p className="text-muted mb-4">
@@ -218,38 +220,49 @@ const Dashboard = () => {
         </p>
       </div>
 
-      {/* Stats Cards - Improved Responsive Grid */}
       <Row className="g-3">
         {stats.map((item, i) => (
           <Col xs={12} sm={6} md={3} key={i} className="mb-3">
-            <Card
-              className="border-0 shadow-sm h-100"
-              style={{ minHeight: "120px" }}>
-              <Card.Body className="p-3 d-flex flex-column justify-content-center align-items-center text-center">
-                {/* Count with large font */}
-                <h1
-                  className="display-6 fw-bold mb-2"
-                  style={{ color: item.color }}>
-                  {loading ? (
-                    <Spinner animation="border" size="sm" />
-                  ) : (
-                    item.count
-                  )}
-                </h1>
+            {/* 3. Wrap the Card in a Link or use Link as the component */}
+            <Link to={item.path} style={{ textDecoration: "none" }}>
+              <Card
+                className="border-0 shadow-sm h-100 stats-card"
+                style={{
+                  minHeight: "120px",
+                  transition: "transform 0.2s", // Added a subtle hover effect
+                }}
+                onMouseOver={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.02)")
+                }
+                onMouseOut={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
+              >
+                <Card.Body className="p-3 d-flex flex-column justify-content-center align-items-center text-center">
+                  <h1
+                    className="display-6 fw-bold mb-2"
+                    style={{ color: item.color }}
+                  >
+                    {loading ? (
+                      <Spinner animation="border" size="sm" />
+                    ) : (
+                      item.count
+                    )}
+                  </h1>
 
-                {/* Title */}
-                <p className="text-muted mb-0 small fw-bold text-uppercase">
-                  {item.title}
-                </p>
+                  <p className="text-muted mb-0 small fw-bold text-uppercase">
+                    {item.title}
+                  </p>
 
-                {/* Optional icon */}
-                <div className="mt-2">
-                  <i
-                    className={`${item.icon} fs-5`}
-                    style={{ color: item.color }}></i>
-                </div>
-              </Card.Body>
-            </Card>
+                  <div className="mt-2">
+                    <i
+                      className={`${item.icon} fs-5`}
+                      style={{ color: item.color }}
+                    ></i>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Link>
           </Col>
         ))}
       </Row>

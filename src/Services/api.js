@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: import.meta.env.DEV ? "/api" : "https://lawnode.rxchartsquare.com",
+  baseURL: import.meta.env.DEV ? "/api" : "https://node.sapiencedesk.com",
 });
 console.log("✅ Axios API initialized");
 console.log("Mode:", import.meta.env.DEV ? "DEV (proxy enabled)" : "PROD");

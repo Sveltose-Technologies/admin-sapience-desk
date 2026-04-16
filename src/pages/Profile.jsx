@@ -9,17 +9,8 @@
 //   Spinner,
 // } from "react-bootstrap";
 // import { toast } from "react-toastify";
-// import { updateAdminProfile } from "../Services/adminService";
-// import {
-//   FaUser,
-//   FaEnvelope,
-//   FaPhone,
-//   FaLock,
-//   FaFacebook,
-//   FaTwitter,
-//   FaLinkedin,
-//   FaSave,
-// } from "react-icons/fa";
+// import { getAdminProfile, updateAdminProfile } from "../Services/adminService";
+// import { FaSave, FaYoutube } from "react-icons/fa";
 
 // const Profile = () => {
 //   const [loading, setLoading] = useState(false);
@@ -32,39 +23,61 @@
 //     facebook: "",
 //     twitter: "",
 //     linkedin: "",
-//     // Address fields (as per your API response)
+//     youtube: "", // Added YouTube field
 //     street: "",
 //     city: "",
 //     state: "",
 //     pincode: "",
 //     country: "",
-//     // Security
 //     newPassword: "",
 //     confirmPassword: "",
 //   });
 
+//   // Fetch profile from API
+//   const fetchProfile = async (id) => {
+//     try {
+//       setLoading(true);
+//       const res = await getAdminProfile(id);
+
+//       if (res.status && res.data) {
+//         const data = res.data;
+//         setFormData({
+//           name: data.name || "",
+//           email: data.email || "",
+//           contactNo: data.contactNo || "",
+//           facebook: data.facebook || "",
+//           twitter: data.twitter || "",
+//           linkedin: data.linkedin || "",
+//           youtube: data.youtube || "", // Set YouTube from API
+//           street: data.address?.street || "",
+//           city: data.address?.city || "",
+//           state: data.address?.state || "",
+//           pincode: data.address?.pincode || "",
+//           country: data.address?.country || "",
+//           newPassword: "",
+//           confirmPassword: "",
+//         });
+//       }
+//     } catch (err) {
+//       toast.error("Failed to load profile details");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
 //   useEffect(() => {
 //     const userData = JSON.parse(localStorage.getItem("adminUser"));
 //     if (userData) {
-//       setAdminId(userData._id || userData.id);
+//       const id = userData._id || userData.id;
+//       setAdminId(id);
 
-//       // Mapping API response to Form
-//       setFormData({
+//       setFormData((prev) => ({
+//         ...prev,
 //         name: userData.name || "",
 //         email: userData.email || "",
-//         contactNo: userData.contactNo || "",
-//         facebook: userData.facebook || "",
-//         twitter: userData.twitter || "",
-//         linkedin: userData.linkedin || "",
-//         // Nested address mapping
-//         street: userData.address?.street || "",
-//         city: userData.address?.city || "",
-//         state: userData.address?.state || "",
-//         pincode: userData.address?.pincode || "",
-//         country: userData.address?.country || "",
-//         newPassword: "",
-//         confirmPassword: "",
-//       });
+//       }));
+
+//       fetchProfile(id);
 //     }
 //   }, []);
 
@@ -74,6 +87,7 @@
 
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
+
 //     if (
 //       formData.newPassword &&
 //       formData.newPassword !== formData.confirmPassword
@@ -84,7 +98,6 @@
 //     try {
 //       setLoading(true);
 
-//       // Wahi parameters jo aapne bataye hain
 //       const payload = {
 //         name: formData.name,
 //         email: formData.email,
@@ -92,6 +105,7 @@
 //         facebook: formData.facebook,
 //         twitter: formData.twitter,
 //         linkedin: formData.linkedin,
+//         youtube: formData.youtube, // Included in payload
 //         street: formData.street,
 //         city: formData.city,
 //         state: formData.state,
@@ -121,18 +135,22 @@
 //   };
 
 //   return (
-//     <Container className="py-3">
-//       {/* Mini Profile Header */}
+//     <Container fluid="md" className="py-3 px-2 px-md-3">
+//       {/* Mini Profile Header - Responsive Flex */}
 //       <Card className="mb-3 border-0 shadow-sm bg-white">
 //         <Card.Body className="py-2 px-3 d-flex align-items-center">
 //           <div
-//             className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm"
-//             style={{ width: "45px", height: "45px", fontSize: "1.1rem" }}>
+//             className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm flex-shrink-0"
+//             style={{ width: "45px", height: "45px", fontSize: "1.1rem" }}
+//           >
 //             {formData.name?.charAt(0).toUpperCase()}
 //           </div>
-//           <div className="ms-3">
-//             <h6 className="mb-0 fw-bold">{formData.name}</h6>
-//             <small className="text-muted" style={{ fontSize: "11px" }}>
+//           <div className="ms-3 overflow-hidden">
+//             <h6 className="mb-0 fw-bold text-truncate">{formData.name}</h6>
+//             <small
+//               className="text-muted text-truncate d-block"
+//               style={{ fontSize: "11px" }}
+//             >
 //               {formData.email}
 //             </small>
 //           </div>
@@ -141,17 +159,19 @@
 
 //       <Form onSubmit={handleSubmit}>
 //         <Row className="g-3">
-//           {/* Left: Basic & Social */}
-//           <Col lg={7}>
+//           {/* Left Column: Personal, Social & Security */}
+//           <Col xs={12} lg={7}>
+//             {/* Personal & Social */}
 //             <Card className="border-0 shadow-sm mb-3">
 //               <Card.Body className="p-3">
 //                 <h6
 //                   className="fw-bold mb-3 text-primary border-bottom pb-2"
-//                   style={{ fontSize: "14px" }}>
+//                   style={{ fontSize: "14px" }}
+//                 >
 //                   Personal & Social Profiles
 //                 </h6>
 //                 <Row className="g-2">
-//                   <Col md={6}>
+//                   <Col xs={12} md={6}>
 //                     <Form.Label className="small mb-0">Full Name</Form.Label>
 //                     <Form.Control
 //                       size="sm"
@@ -160,7 +180,7 @@
 //                       onChange={handleChange}
 //                     />
 //                   </Col>
-//                   <Col md={6}>
+//                   <Col xs={12} md={6}>
 //                     <Form.Label className="small mb-0">Email</Form.Label>
 //                     <Form.Control
 //                       size="sm"
@@ -170,7 +190,7 @@
 //                       onChange={handleChange}
 //                     />
 //                   </Col>
-//                   <Col md={6}>
+//                   <Col xs={12} md={6}>
 //                     <Form.Label className="small mb-0">Contact No</Form.Label>
 //                     <Form.Control
 //                       size="sm"
@@ -179,7 +199,7 @@
 //                       onChange={handleChange}
 //                     />
 //                   </Col>
-//                   <Col md={6}>
+//                   <Col xs={12} md={6}>
 //                     <Form.Label className="small mb-0">Facebook</Form.Label>
 //                     <Form.Control
 //                       size="sm"
@@ -188,7 +208,7 @@
 //                       onChange={handleChange}
 //                     />
 //                   </Col>
-//                   <Col md={6}>
+//                   <Col xs={12} md={6}>
 //                     <Form.Label className="small mb-0">Twitter</Form.Label>
 //                     <Form.Control
 //                       size="sm"
@@ -197,8 +217,8 @@
 //                       onChange={handleChange}
 //                     />
 //                   </Col>
-//                   <Col md={6}>
-//                     <Form.Label className="small mb-0">Linkedin</Form.Label>
+//                   <Col xs={12} md={6}>
+//                     <Form.Label className="small mb-0">LinkedIn</Form.Label>
 //                     <Form.Control
 //                       size="sm"
 //                       name="linkedin"
@@ -206,19 +226,34 @@
 //                       onChange={handleChange}
 //                     />
 //                   </Col>
+//                   {/* Added YouTube Field */}
+//                   <Col xs={12}>
+//                     <Form.Label className="small mb-0">
+//                       YouTube Channel
+//                     </Form.Label>
+//                     <Form.Control
+//                       size="sm"
+//                       name="youtube"
+//                       value={formData.youtube}
+//                       onChange={handleChange}
+//                       placeholder="https://youtube.com/..."
+//                     />
+//                   </Col>
 //                 </Row>
 //               </Card.Body>
 //             </Card>
 
-//             <Card className="border-0 shadow-sm">
+//             {/* Security */}
+//             <Card className="border-0 shadow-sm mb-3 mb-lg-0">
 //               <Card.Body className="p-3">
 //                 <h6
 //                   className="fw-bold mb-3 text-danger border-bottom pb-2"
-//                   style={{ fontSize: "14px" }}>
+//                   style={{ fontSize: "14px" }}
+//                 >
 //                   Security Settings
 //                 </h6>
 //                 <Row className="g-2">
-//                   <Col md={6}>
+//                   <Col xs={12} md={6}>
 //                     <Form.Label className="small mb-0">New Password</Form.Label>
 //                     <Form.Control
 //                       size="sm"
@@ -229,7 +264,7 @@
 //                       placeholder="******"
 //                     />
 //                   </Col>
-//                   <Col md={6}>
+//                   <Col xs={12} md={6}>
 //                     <Form.Label className="small mb-0">
 //                       Confirm Password
 //                     </Form.Label>
@@ -247,17 +282,18 @@
 //             </Card>
 //           </Col>
 
-//           {/* Right: Address Only */}
-//           <Col lg={5}>
+//           {/* Right Column: Address */}
+//           <Col xs={12} lg={5}>
 //             <Card className="border-0 shadow-sm h-100">
-//               <Card.Body className="p-3">
+//               <Card.Body className="p-3 d-flex flex-column">
 //                 <h6
 //                   className="fw-bold mb-3 text-success border-bottom pb-2"
-//                   style={{ fontSize: "14px" }}>
+//                   style={{ fontSize: "14px" }}
+//                 >
 //                   Address Details
 //                 </h6>
-//                 <Row className="g-2">
-//                   <Col md={12}>
+//                 <Row className="g-2 flex-grow-1">
+//                   <Col xs={12}>
 //                     <Form.Label className="small mb-0">
 //                       Street Address
 //                     </Form.Label>
@@ -268,7 +304,7 @@
 //                       onChange={handleChange}
 //                     />
 //                   </Col>
-//                   <Col md={6}>
+//                   <Col xs={6}>
 //                     <Form.Label className="small mb-0">City</Form.Label>
 //                     <Form.Control
 //                       size="sm"
@@ -277,7 +313,7 @@
 //                       onChange={handleChange}
 //                     />
 //                   </Col>
-//                   <Col md={6}>
+//                   <Col xs={6}>
 //                     <Form.Label className="small mb-0">State</Form.Label>
 //                     <Form.Control
 //                       size="sm"
@@ -286,7 +322,7 @@
 //                       onChange={handleChange}
 //                     />
 //                   </Col>
-//                   <Col md={6}>
+//                   <Col xs={6}>
 //                     <Form.Label className="small mb-0">Pincode</Form.Label>
 //                     <Form.Control
 //                       size="sm"
@@ -295,7 +331,7 @@
 //                       onChange={handleChange}
 //                     />
 //                   </Col>
-//                   <Col md={6}>
+//                   <Col xs={6}>
 //                     <Form.Label className="small mb-0">Country</Form.Label>
 //                     <Form.Control
 //                       size="sm"
@@ -305,13 +341,15 @@
 //                     />
 //                   </Col>
 //                 </Row>
+
 //                 <div className="mt-4 pt-3">
 //                   <Button
 //                     variant="primary"
 //                     type="submit"
 //                     size="sm"
-//                     className="w-100 py-2 fw-bold shadow-sm"
-//                     disabled={loading}>
+//                     className="w-100 py-2 fw-bold shadow-sm mt-auto"
+//                     disabled={loading}
+//                   >
 //                     {loading ? (
 //                       <Spinner animation="border" size="sm" />
 //                     ) : (
@@ -331,8 +369,6 @@
 // };
 
 // export default Profile;
-
-
 import React, { useState, useEffect } from "react";
 import {
   Container,
@@ -344,8 +380,8 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { getAdminProfile, updateAdminProfile } from "../Services/adminService"; // Added missing import
-import { FaSave } from "react-icons/fa";
+import { getAdminProfile, updateAdminProfile } from "../Services/adminService";
+import { FaSave, FaYoutube, FaEdit } from "react-icons/fa";
 
 const Profile = () => {
   const [loading, setLoading] = useState(false);
@@ -358,6 +394,8 @@ const Profile = () => {
     facebook: "",
     twitter: "",
     linkedin: "",
+    youtube: "",
+    textEditor: "", // Added parameter
     street: "",
     city: "",
     state: "",
@@ -371,7 +409,7 @@ const Profile = () => {
   const fetchProfile = async (id) => {
     try {
       setLoading(true);
-      const res = await getAdminProfile(id); // Make sure this API exists and returns data
+      const res = await getAdminProfile(id);
 
       if (res.status && res.data) {
         const data = res.data;
@@ -382,6 +420,8 @@ const Profile = () => {
           facebook: data.facebook || "",
           twitter: data.twitter || "",
           linkedin: data.linkedin || "",
+          youtube: data.youtube || "",
+          textEditor: data.textEditor || "",
           street: data.address?.street || "",
           city: data.address?.city || "",
           state: data.address?.state || "",
@@ -404,7 +444,6 @@ const Profile = () => {
       const id = userData._id || userData.id;
       setAdminId(id);
 
-      // Temporary name/email before fetching full profile
       setFormData((prev) => ({
         ...prev,
         name: userData.name || "",
@@ -439,6 +478,8 @@ const Profile = () => {
         facebook: formData.facebook,
         twitter: formData.twitter,
         linkedin: formData.linkedin,
+        youtube: formData.youtube,
+        textEditor: formData.textEditor, // Included in payload
         street: formData.street,
         city: formData.city,
         state: formData.state,
@@ -459,6 +500,8 @@ const Profile = () => {
           newPassword: "",
           confirmPassword: "",
         }));
+        // Optional: Re-fetch to confirm update in UI
+        fetchProfile(adminId);
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Internal Server Error");
@@ -468,18 +511,21 @@ const Profile = () => {
   };
 
   return (
-    <Container className="py-3">
-      {/* Mini Profile Header */}
+    <Container fluid="md" className="py-3 px-2 px-md-3">
       <Card className="mb-3 border-0 shadow-sm bg-white">
         <Card.Body className="py-2 px-3 d-flex align-items-center">
           <div
-            className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm"
-            style={{ width: "45px", height: "45px", fontSize: "1.1rem" }}>
+            className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm flex-shrink-0"
+            style={{ width: "45px", height: "45px", fontSize: "1.1rem" }}
+          >
             {formData.name?.charAt(0).toUpperCase()}
           </div>
-          <div className="ms-3">
-            <h6 className="mb-0 fw-bold">{formData.name}</h6>
-            <small className="text-muted" style={{ fontSize: "11px" }}>
+          <div className="ms-3 overflow-hidden">
+            <h6 className="mb-0 fw-bold text-truncate">{formData.name}</h6>
+            <small
+              className="text-muted text-truncate d-block"
+              style={{ fontSize: "11px" }}
+            >
               {formData.email}
             </small>
           </div>
@@ -488,18 +534,17 @@ const Profile = () => {
 
       <Form onSubmit={handleSubmit}>
         <Row className="g-3">
-          {/* Left: Personal & Social + Security */}
-          <Col lg={7}>
-            {/* Personal & Social */}
+          <Col xs={12} lg={7}>
             <Card className="border-0 shadow-sm mb-3">
               <Card.Body className="p-3">
                 <h6
                   className="fw-bold mb-3 text-primary border-bottom pb-2"
-                  style={{ fontSize: "14px" }}>
+                  style={{ fontSize: "14px" }}
+                >
                   Personal & Social Profiles
                 </h6>
                 <Row className="g-2">
-                  <Col md={6}>
+                  <Col xs={12} md={6}>
                     <Form.Label className="small mb-0">Full Name</Form.Label>
                     <Form.Control
                       size="sm"
@@ -508,7 +553,7 @@ const Profile = () => {
                       onChange={handleChange}
                     />
                   </Col>
-                  <Col md={6}>
+                  <Col xs={12} md={6}>
                     <Form.Label className="small mb-0">Email</Form.Label>
                     <Form.Control
                       size="sm"
@@ -518,7 +563,7 @@ const Profile = () => {
                       onChange={handleChange}
                     />
                   </Col>
-                  <Col md={6}>
+                  <Col xs={12} md={6}>
                     <Form.Label className="small mb-0">Contact No</Form.Label>
                     <Form.Control
                       size="sm"
@@ -527,7 +572,7 @@ const Profile = () => {
                       onChange={handleChange}
                     />
                   </Col>
-                  <Col md={6}>
+                  <Col xs={12} md={6}>
                     <Form.Label className="small mb-0">Facebook</Form.Label>
                     <Form.Control
                       size="sm"
@@ -536,7 +581,7 @@ const Profile = () => {
                       onChange={handleChange}
                     />
                   </Col>
-                  <Col md={6}>
+                  <Col xs={12} md={6}>
                     <Form.Label className="small mb-0">Twitter</Form.Label>
                     <Form.Control
                       size="sm"
@@ -545,7 +590,7 @@ const Profile = () => {
                       onChange={handleChange}
                     />
                   </Col>
-                  <Col md={6}>
+                  <Col xs={12} md={6}>
                     <Form.Label className="small mb-0">LinkedIn</Form.Label>
                     <Form.Control
                       size="sm"
@@ -554,20 +599,48 @@ const Profile = () => {
                       onChange={handleChange}
                     />
                   </Col>
+                  <Col xs={12}>
+                    <Form.Label className="small mb-0">
+                      YouTube Channel
+                    </Form.Label>
+                    <Form.Control
+                      size="sm"
+                      name="youtube"
+                      value={formData.youtube}
+                      onChange={handleChange}
+                      placeholder="https://youtube.com/..."
+                    />
+                  </Col>
+
+                  {/* Added Field: Footer Content */}
+                  <Col xs={12}>
+                    <Form.Label className="small mb-0">
+                      Footer Content
+                    </Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      size="sm"
+                      name="textEditor"
+                      value={formData.textEditor}
+                      onChange={handleChange}
+                      placeholder="Enter footer content..."
+                    />
+                  </Col>
                 </Row>
               </Card.Body>
             </Card>
 
-            {/* Security */}
-            <Card className="border-0 shadow-sm">
+            <Card className="border-0 shadow-sm mb-3 mb-lg-0">
               <Card.Body className="p-3">
                 <h6
                   className="fw-bold mb-3 text-danger border-bottom pb-2"
-                  style={{ fontSize: "14px" }}>
+                  style={{ fontSize: "14px" }}
+                >
                   Security Settings
                 </h6>
                 <Row className="g-2">
-                  <Col md={6}>
+                  <Col xs={12} md={6}>
                     <Form.Label className="small mb-0">New Password</Form.Label>
                     <Form.Control
                       size="sm"
@@ -578,7 +651,7 @@ const Profile = () => {
                       placeholder="******"
                     />
                   </Col>
-                  <Col md={6}>
+                  <Col xs={12} md={6}>
                     <Form.Label className="small mb-0">
                       Confirm Password
                     </Form.Label>
@@ -596,17 +669,17 @@ const Profile = () => {
             </Card>
           </Col>
 
-          {/* Right: Address */}
-          <Col lg={5}>
+          <Col xs={12} lg={5}>
             <Card className="border-0 shadow-sm h-100">
-              <Card.Body className="p-3">
+              <Card.Body className="p-3 d-flex flex-column">
                 <h6
                   className="fw-bold mb-3 text-success border-bottom pb-2"
-                  style={{ fontSize: "14px" }}>
+                  style={{ fontSize: "14px" }}
+                >
                   Address Details
                 </h6>
-                <Row className="g-2">
-                  <Col md={12}>
+                <Row className="g-2 flex-grow-1">
+                  <Col xs={12}>
                     <Form.Label className="small mb-0">
                       Street Address
                     </Form.Label>
@@ -617,7 +690,7 @@ const Profile = () => {
                       onChange={handleChange}
                     />
                   </Col>
-                  <Col md={6}>
+                  <Col xs={6}>
                     <Form.Label className="small mb-0">City</Form.Label>
                     <Form.Control
                       size="sm"
@@ -626,7 +699,7 @@ const Profile = () => {
                       onChange={handleChange}
                     />
                   </Col>
-                  <Col md={6}>
+                  <Col xs={6}>
                     <Form.Label className="small mb-0">State</Form.Label>
                     <Form.Control
                       size="sm"
@@ -635,7 +708,7 @@ const Profile = () => {
                       onChange={handleChange}
                     />
                   </Col>
-                  <Col md={6}>
+                  <Col xs={6}>
                     <Form.Label className="small mb-0">Pincode</Form.Label>
                     <Form.Control
                       size="sm"
@@ -644,7 +717,7 @@ const Profile = () => {
                       onChange={handleChange}
                     />
                   </Col>
-                  <Col md={6}>
+                  <Col xs={6}>
                     <Form.Label className="small mb-0">Country</Form.Label>
                     <Form.Control
                       size="sm"
@@ -654,13 +727,15 @@ const Profile = () => {
                     />
                   </Col>
                 </Row>
+
                 <div className="mt-4 pt-3">
                   <Button
                     variant="primary"
                     type="submit"
                     size="sm"
-                    className="w-100 py-2 fw-bold shadow-sm"
-                    disabled={loading}>
+                    className="w-100 py-2 fw-bold shadow-sm mt-auto"
+                    disabled={loading}
+                  >
                     {loading ? (
                       <Spinner animation="border" size="sm" />
                     ) : (

@@ -142,7 +142,7 @@
 
 // export default Header;
 
-import React from "react";
+import React, { useState } from "react";
 import { Navbar, Container, Nav, Button, Dropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -150,8 +150,8 @@ import { adminLogout } from "../../Services/adminService";
 
 const Header = ({ toggleSidebar }) => {
   const navigate = useNavigate();
+  const [show, setShow] = useState(false);
 
-  // LocalStorage se admin ka naam nikalne ke liye (Initials dikhane ke liye)
   const adminUser = JSON.parse(localStorage.getItem("adminUser"));
   const adminInitials = adminUser?.name
     ? adminUser.name.substring(0, 2).toUpperCase()
@@ -159,82 +159,94 @@ const Header = ({ toggleSidebar }) => {
 
   const handleLogout = async () => {
     try {
+      setShow(false);
       await adminLogout();
       toast.success("Logged out successfully");
       navigate("/login");
     } catch (error) {
-      toast.error("Logout process failed");
+      toast.error("Logout failed");
       navigate("/login");
     }
   };
 
   return (
-    <Navbar bg="white" expand="lg" className="shadow-sm px-3 py-2 sticky-top">
-      <Container fluid>
-        {/* Mobile Toggle Button - Hidden on large screens */}
+    <Navbar
+      bg="white"
+      className="shadow-sm border-bottom px-3 sticky-top"
+      style={{ height: "60px" }}
+    >
+      <Container fluid className="p-0 d-flex align-items-center">
+        {/* Left Menu Icon */}
         <Button
-          variant="link"
-          className="d-lg-none text-dark me-2 p-0"
-          onClick={toggleSidebar}>
-          <span className="navbar-toggler-icon"></span>
+          variant="light"
+          className="border-0 d-lg-none me-2"
+          onClick={toggleSidebar}
+        >
+          <i className="bi bi-list fs-4"></i>
         </Button>
 
-        {/* Dashboard Text - Different for mobile and desktop */}
-        <Navbar.Brand className="fw-bold d-none d-md-block">
+        {/* Title Centered on Mobile */}
+        <div className="flex-grow-1 text-center text-lg-start fw-bold">
           Dashboard
-        </Navbar.Brand>
-        <Navbar.Brand className="fw-bold d-md-none d-block">
-          Dashboard
-        </Navbar.Brand>
+        </div>
 
-        {/* User Profile Section */}
-        <Nav className="ms-auto align-items-center">
-          <Dropdown align="end">
+        {/* Right Avatar */}
+        {/* Right Avatar */}
+        <div className="d-flex align-items-center">
+          <Dropdown
+            align="end"
+            show={show}
+            onToggle={(isOpen) => setShow(isOpen)}
+          >
             <Dropdown.Toggle
-              variant="link"
-              className="text-decoration-none p-0 d-flex align-items-center border-0">
-              {/* User Initials Circle */}
+              as="div"
+              style={{ cursor: "pointer", paddingRight: "4px" }}
+              className="d-flex align-items-center"
+            >
               <div
-                className="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+                className="rounded-circle d-flex align-items-center justify-content-center text-white shadow-sm"
                 style={{
                   width: "40px",
                   height: "40px",
-                  fontSize: "16px",
-                  fontWeight: "bold",
-                }}>
+                  background: "linear-gradient(135deg, #4f46e5, #6366f1)",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                }}
+              >
                 {adminInitials}
               </div>
-
-              {/* User Name - Hidden on small screens */}
-              <span className="d-none d-md-inline text-dark fw-medium">
-                {adminUser?.name || "Admin"}
-              </span>
-
-              {/* Dropdown icon for mobile */}
-              <i className="bi bi-chevron-down d-md-none ms-1"></i>
             </Dropdown.Toggle>
 
-            <Dropdown.Menu className="shadow border-0 mt-2">
-              {/* Profile Link */}
+            <Dropdown.Menu
+              className="shadow-lg border-0 rounded-3 mt-2"
+              style={{
+                minWidth: "190px",
+                padding: "8px",
+              }}
+            >
               <Dropdown.Item
-                onClick={() => navigate("/admin/profile")}
-                className="d-flex align-items-center">
-                <i className="bi bi-person me-2"></i>
+                className="rounded-2 py-2 d-flex align-items-center"
+                onClick={() => {
+                  setShow(false);
+                  navigate("/admin/profile");
+                }}
+              >
+                <i className="bi bi-person me-2 text-primary"></i>
                 Edit Profile
               </Dropdown.Item>
 
               <Dropdown.Divider />
 
-              {/* Logout Link */}
               <Dropdown.Item
+                className="rounded-2 py-2 d-flex align-items-center text-danger"
                 onClick={handleLogout}
-                className="text-danger d-flex align-items-center">
+              >
                 <i className="bi bi-box-arrow-right me-2"></i>
                 Logout
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-        </Nav>
+        </div>
       </Container>
     </Navbar>
   );

@@ -1,6 +1,6 @@
 import API from "./api";
 
-export const IMG_URL = "https://lawnode.rxchartsquare.com"; // Fixed: Trailing slash hataya
+export const IMG_URL = "https://node.sapiencedesk.com";
 
 // --- Helper: Image URL processing with Cache Buster ---
 export const getFullImageUrl = (path) => {
@@ -31,6 +31,35 @@ export const getFullImageUrl = (path) => {
 // 1. ARTICLE METHODS
 // ==========================
 
+export const getAllPayments = async () => {
+  try {
+    const response = await API.get("/payment/getall");
+    console.log("Payments API response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all payments:", error);
+    throw error;
+  }
+};
+export const getPaymentsByUserId = async (userId) => {
+  try {
+    const response = await API.get(`/payment/get-by-userId/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching payments for user ${userId}:`, error);
+    throw error;
+  }
+};
+
+export const deletePaymentRecord = async (userId) => {
+  try {
+    const response = await API.get(`/payment/get-by-userId/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getAllArticles = async () => {
   try {
     const response = await API.get("/article/get-all");
@@ -55,16 +84,19 @@ export const createArticle = async (formData) => {
 export const updateArticle = async (id, formData) => {
   try {
     console.log(`🔄 Updating article ID: ${id}`);
-    
+
     // Request bhejne se pehle headers ensure karein
     const response = await API.put(`/article/update/${id}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-    
+
     console.log("✅ Update response:", response.data);
     return response.data;
   } catch (error) {
-    console.error("❌ Error updating article:", error.response?.data || error.message);
+    console.error(
+      "❌ Error updating article:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
@@ -337,7 +369,7 @@ export const createSubCategory = async (data) => {
 export const updateSubCategory = async (id, formData) => {
   try {
     console.log(`🔄 Flow: Updating SubCategory ID: ${id}`);
-    
+
     // Debugging ke liye FormData check karein
     for (let [key, value] of formData.entries()) {
       console.log(`${key}:`, value);
@@ -354,7 +386,7 @@ export const updateSubCategory = async (id, formData) => {
   } catch (error) {
     console.error(
       "❌ Flow: Update SubCategory Error:",
-      error.response?.data || error.message
+      error.response?.data || error.message,
     );
     throw error;
   }
@@ -519,8 +551,6 @@ export const updateAboutUs = (id, formData) =>
   API.put(`/aboutus/update/${id}`, formData);
 export const deleteAboutUs = (id) => API.delete(`/aboutus/delete/${id}`);
 
-
-
 // --- TERMS & CONDITIONS APIs ---
 export const getAllTerms = async () => {
   const res = await API.get("/terms/get-all");
@@ -533,15 +563,23 @@ export const deleteTerms = (id) => API.delete(`/terms/delete/${id}`);
 
 // --- PRIVACY POLICY APIs ---
 export const getAllPrivacy = async () => {
-  const res = await API.get("/privacy/get-all");
-  console.log("GET ALL PRIVACY:", res.data);
-  return res.data;
+  try {
+    const res = await API.get("/privacy/get-all");
+    console.log("GET ALL PRIVACY:", res.data);
+    return res.data;
+  } catch (error) {
+    console.error(
+      "❌ Error fetching privacy policies:",
+      error.response?.data || error.message,
+    );
+    throw error;
+  }
 };
+
 export const createPrivacy = (data) => API.post("/privacy/create", data);
 export const updatePrivacy = (id, data) =>
   API.put(`/privacy/update/${id}`, data);
 export const deletePrivacy = (id) => API.delete(`/privacy/delete/${id}`);
-
 
 // ==========================================
 // ADMIN CONTACT US METHODS (Fixed)
@@ -609,6 +647,101 @@ export const deleteContactUs = async (id) => {
     return response.data;
   } catch (error) {
     console.error("API ERROR: Delete Contact Us:", error);
+    throw error;
+  }
+};
+
+// ==========================================
+// ADMIN Events METHODS
+// ==========================================
+export const getALLEvents = async () => {
+  try {
+    const response = await API.get("/events/get-all");
+    return response.data;
+  } catch (error) {
+    console.error("API ERROR: Get All Events:", error);
+    throw error;
+  }
+};
+
+export const createEvent = async (formData) => {
+  try {
+    const response = await API.post("/events/create", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("API ERROR: Create Event:", error);
+    throw error;
+  }
+};
+
+export const toggleEventStatus = (id, status) => {
+  return API.put(`/events/toggle-status/${id}`, { status });
+};
+export const updateEvent = (id, data) => {
+  return API.put(`/events/update/${id}`, data, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
+
+export const deleteEvent = async (id) => {
+  try {
+    const response = await API.delete(`/events/delete/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("API ERROR: Delete Event:", error);
+    throw error;
+  }
+};
+// ==========================================
+// ADMIN Video METHODS
+// ==========================================
+
+// Get all videos
+export const getAllVideos = async () => {
+  try {
+    const response = await API.get("/videos/get-all");
+    // console.log("API RESPONSE: Get All Videos:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("API ERROR: Get All Videos:", error);
+    throw error;
+  }
+  // return axios.get(`/videos/get-all`);
+};
+
+// Create video
+export const createVideo = async (data) => {
+  try {
+    const response = await API.post("/videos/create", data);
+    return response.data;
+  } catch (error) {
+    console.error("API ERROR: Create Video:", error);
+    throw error;
+  }
+  // return axios.post(`/videos/create`, data);
+};
+
+// Update video
+export const updateVideo = async (id, data) => {
+  try {
+    const response = await API.put(`/videos/update/${id}`, data);
+    return response.data;
+  } catch (error) {
+    console.error("API ERROR: Update Video:", error);
+    throw error;
+  }
+};
+
+// Delete video
+export const deleteVideo = async (id) => {
+  // return axios.delete(`/videos/delete/${id}`);
+  try {
+    const response = await API.delete(`/videos/delete/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("API ERROR: Delete Video:", error);
     throw error;
   }
 };
