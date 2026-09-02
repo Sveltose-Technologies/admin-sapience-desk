@@ -313,3 +313,15 @@ td { font-size: 14px; vertical-align: middle; }
 .nav-link-custom span {
   transition: all 0.2s ease;
 }
+
+/* Fix for word breaking in the middle */
+.ql-editor, .ck-editor__editable, .ck-content, .article-content, .text-editor-content,
+.ql-editor *, .ck-editor__editable *, .ck-content *, .article-content *, .text-editor-content * {
+  word-break: normal !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+  -webkit-hyphens: none !important;
+  -moz-hyphens: none !important;
+  -ms-hyphens: none !important;
+  hyphens: none !important;
+}
